@@ -28,6 +28,10 @@ TEST_F(SoundexEncoding, IgnoresNonAlphabetics) {
     ASSERT_THAT(soundex.encode("A#"), Eq("A000"));
 }
 
+TEST_F(SoundexEncoding, DISABLED_ReplaceMultipleConstantsWithDigits) {
+    ASSERT_THAT(soundex.encode("Acdl"), Eq("A234"));
+}
+
 int main(int argc, char** argv) {
     testing::InitGoogleMock(&argc, argv);
     return RUN_ALL_TESTS();
