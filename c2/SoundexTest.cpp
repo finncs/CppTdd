@@ -38,6 +38,21 @@ TEST_F(SoundexEncoding, LimitsLengthToFourCharacters) {
     ASSERT_THAT(soundex.encode("Dcdlb").length(), Eq(4u));
 }
 
+// Rules => 丢弃所有的元音以及 w h y
+TEST_F(SoundexEncoding, IgnoresVowelLikeLetters) {
+    ASSERT_THAT(soundex.encode("Baeiouhycdl"), Eq("B234"));
+}
+
+// 两个相邻字母有相同数字编码的情形
+TEST_F(SoundexEncoding, CombinesDuplicateEncodings) {
+
+    ASSERT_THAT(soundex.encodedDigit('b'), Eq(soundex.encodedDigit('f')));
+    ASSERT_THAT(soundex.encodedDigit('c'), Eq(soundex.encodedDigit('g')));
+    ASSERT_THAT(soundex.encodedDigit('d'), Eq(soundex.encodedDigit('t')));
+
+    ASSERT_THAT(soundex.encode("Abfcgdt"), Eq("A123"));
+}
+
 int main(int argc, char** argv) {
     testing::InitGoogleMock(&argc, argv);
     return RUN_ALL_TESTS();
