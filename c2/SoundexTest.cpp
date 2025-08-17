@@ -40,7 +40,7 @@ TEST_F(SoundexEncoding, LimitsLengthToFourCharacters) {
 
 // Rules => 丢弃所有的元音以及 w h y
 TEST_F(SoundexEncoding, IgnoresVowelLikeLetters) {
-    ASSERT_THAT(soundex.encode("Baeiouhycdl"), Eq("B234"));
+    ASSERT_THAT(soundex.encode("BaAeEiIoOuUhHyYcdl"), Eq("B234"));
 }
 
 // 两个相邻字母有相同数字编码的情形
@@ -51,6 +51,18 @@ TEST_F(SoundexEncoding, CombinesDuplicateEncodings) {
     ASSERT_THAT(soundex.encodedDigit('d'), Eq(soundex.encodedDigit('t')));
 
     ASSERT_THAT(soundex.encode("Abfcgdt"), Eq("A123"));
+}
+
+TEST_F(SoundexEncoding, UppercasesFirstLetter) {
+    ASSERT_THAT(soundex.encode("abcd"), StartsWith("A"));
+}
+
+TEST_F(SoundexEncoding, IgnoreCaseWhenEncodingConsonants) {
+    ASSERT_THAT(soundex.encode("BCDL"), Eq(soundex.encode("Bcdl")));
+}
+
+TEST_F(SoundexEncoding, CombinesDuplicateCodesWhen2ndLetterDuplicates1st) {
+    ASSERT_THAT(soundex.encode("Bbcd"), Eq("B230"));
 }
 
 int main(int argc, char** argv) {
